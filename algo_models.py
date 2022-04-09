@@ -179,13 +179,11 @@ class AlgorandTransaction:
                         trans.sender = innner_txn['sender']
                         trans.id = self.id
                         trans.confirmed_round = self.confirmed_round
-                        is_inner_transaction = True
                     elif innner_txn['tx-type'] == "axfer":
                         trans = AssetTransferTransaction.init_from_json(innner_txn['asset-transfer-transaction'])
                         trans.sender = innner_txn['sender']
                         trans.id = self.id
                         trans.confirmed_round = self.confirmed_round
-                        is_inner_transaction = True
             else:
                 print("No valid transaction, returning un-updated DF")
                 return db_table

@@ -1,5 +1,7 @@
+import pprint
+
 import requests
-from algo_models import AlgorandAccount, BaseTransactionType, AlgorandTransaction, AlgorandTransactionReq, AlgorandTransactionsReq, AlgorandBlock
+from algo_models import AlgorandAccount, AlgorandTransactionReq, AlgorandTransactionsReq, AlgorandBlock
 
 def process_transactions_for_account(account_number: int):
     pass
@@ -36,9 +38,15 @@ class User:
         return AlgorandBlock.init_from_json(block)
 
 
+
+
 if __name__ == '__main__':
-    block = 18931547
+    block_number = 18931547
     account_id = "TY5N6G67JWHSMWFFFZ252FXWKLRO5UZLBEJ4LGV7TPR5PVSKPLDWH3YRXU"
-    algo_account = User().get_algorand_account_by_id(account_id)
-    print(algo_account.get_created_at_round())
+    block = User().get_algorand_block(block_number)
+    # algo_account = User().get_algorand_account_by_id(account_id)
+    # print(algo_account.get_created_at_round())
+    pprint.pprint(block.transactions[152].__dict__)
+    for i, transaction in enumerate(block.transactions):
+        print(i, transaction.transaction_type)
     print("test!")
