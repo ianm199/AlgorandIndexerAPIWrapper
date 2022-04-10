@@ -1,44 +1,64 @@
 from dataclasses import field, dataclass
 from typing import List, Dict
-from enum import Enum
-from models.utils import convert_keys_to_snake_case
-
+from models.utils import SubClass
 
 ASSET_TRANSFER_TRANSACTION = 'asset-transfer-transaction'
 APPLICATION_TRANSACTION = "application-transaction"
 PAYMENT_TRANSACTION = "payment-transaction"
 TRANSACTION = "transaction"
 
+
 @dataclass
-class LocalStateSchema:
+class Value(SubClass):
+	action: int = field(default_factory=int)
+	uint: int = field(default_factory=int)
+
+@dataclass
+class GlobalStateDelta(SubClass):
+
+	SUBCLASSES = {'value': Value}
+
+	value: Value
+	key: str = field(default_factory=str)
+
+@dataclass
+class LocalStateDelta(SubClass):
+	address: str = field(default_factory=str)
+	delta: List[Dict] = field(default_factory=list)
+
+@dataclass
+class LocalStateSchema(SubClass):
 	num_byte_slice: int = field(default_factory=int)
 	num_uint: int = field(default_factory=int)
 
 @dataclass
-class GlobalStateSchema:
+class GlobalStateSchema(SubClass):
 	num_byte_slice: int = field(default_factory=int)
 	num_uint: int = field(default_factory=int)
 
 @dataclass
-class Signature:
+class Signature(SubClass):
 	sig: str = field(default_factory=str)
 
 @dataclass
-class PaymentTransaction:
+class PaymentTransaction(SubClass):
 	amount: int = field(default_factory=int)
 	close_amount: int = field(default_factory=int)
 	receiver: str = field(default_factory=str)
 
 @dataclass
-class AssetTransferTransaction:
+class AssetTransferTransaction(SubClass):
 	amount: int = field(default_factory=int)
 	asset_id: int = field(default_factory=int)
 	close_amount: int = field(default_factory=int)
 	receiver: str = field(default_factory=str)
+	close_to: str = field(default_factory=str)
 
 
 @dataclass
-class ApplicationTransaction:
+class ApplicationTransaction(SubClass):
+	SUBCLASSES = {"local_state_schema": LocalStateSchema, "global_state_schema": GlobalStateSchema}
+
 	local_state_schema: LocalStateSchema
 	global_state_schema: GlobalStateSchema
 	accounts: List = field(default_factory=list)
@@ -49,11 +69,17 @@ class ApplicationTransaction:
 	on_completion: str = field(default_factory=str)
 
 @dataclass
-class AlgorandTransaction:
+class AlgorandTransaction(SubClass):
+	SUBCLASSES = {'payment_transaction': PaymentTransaction, 'asset_transfer_transaction': AssetTransferTransaction,
+				 'application_transfer_transaction': ApplicationTransaction,
+				 'local_state_delta': LocalStateDelta, 'global_state_delta': GlobalStateDelta}
+
 	signature: Signature
 	payment_transaction: PaymentTransaction = field(default_factory=dict)
 	asset_transfer_transaction: AssetTransferTransaction = field(default_factory=dict)
 	application_transaction: ApplicationTransaction = field(default_factory=dict)
+	global_state_delta: GlobalStateDelta = field(default_factory=dict)
+	local_state_delta: List[LocalStateDelta] = field(default_factory=list)
 	close_rewards: int = field(default_factory=int)
 	closing_amount: int = field(default_factory=int)
 	confirmed_round: int = field(default_factory=int)
@@ -71,34 +97,12 @@ class AlgorandTransaction:
 	sender_rewards: int = field(default_factory=int)
 	tx_type: str = field(default_factory=str)
 	transaction_type: str = field(default_factory=str)
+	note: str = field(default_factory=str)
 
-	@classmethod
-	def init_from_json_dict(cls, json_dict: dict):
-		new_dict = convert_keys_to_snake_case(json_dict)
 
-		if ASSET_TRANSFER_TRANSACTION in json_dict or ASSET_TRANSFER_TRANSACTION.replace("-", "_") in json_dict:
-			new_dict['transaction'] = new_dict[ASSET_TRANSFER_TRANSACTION.replace("-", "_")]
-			new_dict['transaction_type'] = ASSET_TRANSFER_TRANSACTION
-			del new_dict[ASSET_TRANSFER_TRANSACTION.replace("-", "_")]
 
-		elif APPLICATION_TRANSACTION in json_dict or APPLICATION_TRANSACTION.replace("-", "_") in json_dict:
-			new_dict['transaction'] = new_dict[APPLICATION_TRANSACTION.replace("-", "_")]
-			new_dict['transaction_type'] = APPLICATION_TRANSACTION
-			del new_dict[APPLICATION_TRANSACTION.replace("-", "_")]
-
-		elif PAYMENT_TRANSACTION in json_dict or PAYMENT_TRANSACTION.replace("-", "_") in json_dict:
-			new_dict['transaction'] = new_dict[PAYMENT_TRANSACTION.replace("-", "_")]
-			new_dict['transaction_type'] = PAYMENT_TRANSACTION
-			del new_dict[PAYMENT_TRANSACTION.replace("-", "_")]
-
-		else:
-			raise ValueError(f"Unsupported tx type: {json_dict}")
-
-		return AlgorandTransaction(**new_dict)
 
 # @dataclass
 # class AlgorandTransaction:
 # 	transaction: Transaction
 # 	current_round: int = field(default_factory=int)
-
-

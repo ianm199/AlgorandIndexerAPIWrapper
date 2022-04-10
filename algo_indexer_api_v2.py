@@ -16,4 +16,4 @@ class APIUser:
         """
         full_url = self.BASE_URL + f"blocks/{block_number}"
         block = requests.get(full_url).json()
-        return AlgorandBlock.init_from_json(block)
+        return AlgorandBlock.init_from_json_dict(block)
