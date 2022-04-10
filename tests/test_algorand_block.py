@@ -103,6 +103,15 @@ class TestAlgorandAsset(TestCase):
         self.assertEqual(asset.asset.created_at_round, 8874561)
         self.assertEqual(asset.asset.params.name, "USDC")
 
+class TestAlgorandAccount(TestCase):
+    """
+    Tests for alogrand acconts classes/ routes
+    """
+    def test_get_account(self):
+        account_id = "2SGUKZCOBEVGN3HPKSXPS6DTCXZ7LSP6G3BQF6KVUIUREBBY2QTGSON7WQ"
+        account = APIUser().get_account(account_id=account_id)
+        self.assertEqual(account.account.address, account_id)
+        self.assertEqual(account.account.created_at_round, 18011267)
 
 
 

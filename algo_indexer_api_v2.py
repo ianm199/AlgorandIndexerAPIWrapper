@@ -4,6 +4,8 @@ from models.algorand_transaction import AlgorandTransaction
 from models.request_models import AlgorandTransactionsReq
 from models.algorand_application import AlgorandApplication
 from models.algorand_asset import AlgorandAsset
+from models.algorand_account import AlgorandAccount
+from models.account_balances import AccountBalanceReq
 import urllib
 
 class APIUser:
@@ -53,6 +55,26 @@ class APIUser:
         full_url = self.BASE_URL + f"/assets/{asset_id}"
         asset = requests.get(full_url).json()
         return AlgorandAsset.init_from_json_dict(asset)
+
+    def get_account(self, account_id: str, **kwargs) -> AlgorandAccount:
+        """
+        Get an algorand account object by ID
+        """
+        full_url = self.BASE_URL + f"/accounts/{account_id}"
+        account = requests.get(full_url).json()
+        return AlgorandAccount.init_from_json_dict(account)
+
+    def get_asset_balances(self, asset_id: str, limit: int =100, **kwargs) -> AccountBalanceReq:
+        """
+        Get the balances in accounts for an asset
+        """
+        full_url = self.BASE_URL + f"/assets/{asset_id}/balances?limit={limit}"
+        if kwargs:
+            params_string = self.create_params_string_from_kwargs(kwargs)
+            full_url += f"&{params_string}"
+        balances = requests.get(full_url).json()
+        return AccountBalanceReq.init_from_json_dict(balances)
+
 
     @staticmethod
     def create_params_string_from_kwargs(kwargs_dict: dict) -> str:
