@@ -1,11 +1,25 @@
 {
-  "global_state_delta": [
-    {
-      "key": "VFlVTA==",
-      "value": {
-        "action": 2,
-        "uint": 14024783996577
-      }
+  "asset": {
+    "index": 0,
+    "deleted": true,
+    "created-at-round": 0,
+    "destroyed-at-round": 0,
+    "params": {
+      "clawback": "string",
+      "creator": "string",
+      "decimals": 19,
+      "default-frozen": true,
+      "freeze": "string",
+      "manager": "string",
+      "metadata-hash": "F2oBpIf0nW9tc9AGulNcZIl7wXdgdpKviADcEVLx3ky99Ax4Urq6CEEExS2gZZCl1GS6C1ywCrHKKH1+OEjMPJB2KrzJ40w9/pZMG9JbMV841w==",
+      "name": "string",
+      "name-b64": "UFqNkbk5eocfUZ8SHlN1jD3w3cO3IPo/W24jp3fSEIxStf6sTq9t0SHUnTodLCV9Xxdpqh4a0sDBLgKOpFOADCSH1LnsrTvhJDkq0bFbYrBW0V9E5PLD2qBvRPCVnPc4C4LjlBD3rNDRqRjZO4dGxelaveWIJf/RK+8MA55aQwZ08iGZwDENigYa7CzpMokDxrHVlS/J6CjNV2/zRUG1PP+1IpNuM0ex/bc/lFSasIsyiA3UDTNjSCTpEFEjW4jEsQ/o71nVrUDeGCiptFayAp0RaiVdNn95FXQmlOkWcmX66/hNNOru70a=",
+      "reserve": "string",
+      "total": 0,
+      "unit-name": "string",
+      "unit-name-b64": "zmzJF8RE9A7BrVeau+6zekTo0fa7gvYWH6Lg6oaScFqFQZd357asnPNRQXGpL26loFzCppZVF2SyOjk0l+LMqyxlJke6QR7ul/8fGCuZvgNG73JLAJzbbLwpF0MrmppiTbrVaXh3LTO5",
+      "url": "string",
+      "url-b64": "MF+2B1ki/qZ9qKo8UsokeOVJ7bDQQZGBNSGXWBuCnPLS1tcG4zkfd6uEfdWYY2UU1UH93bFYMVfyYGGiSS4+ZQUzZfCpUx6XUa7ifbEH6YipM7zfCm8/rYNHDwpj/SVn0j5ti8fwouTyjKNzttrYoLscqL221m3p7EFithKL"
     }
-  ]
+  }
 }

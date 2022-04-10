@@ -71,7 +71,7 @@ class ApplicationTransaction(SubClass):
 @dataclass
 class AlgorandTransaction(SubClass):
 	SUBCLASSES = {'payment_transaction': PaymentTransaction, 'asset_transfer_transaction': AssetTransferTransaction,
-				 'application_transfer_transaction': ApplicationTransaction,
+				 'application_transaction': ApplicationTransaction,
 				 'local_state_delta': LocalStateDelta, 'global_state_delta': GlobalStateDelta}
 
 	signature: Signature
@@ -98,6 +98,7 @@ class AlgorandTransaction(SubClass):
 	tx_type: str = field(default_factory=str)
 	transaction_type: str = field(default_factory=str)
 	note: str = field(default_factory=str)
+	lease: str = field(default_factory=str)
 
 
 

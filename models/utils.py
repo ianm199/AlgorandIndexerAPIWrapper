@@ -1,3 +1,4 @@
+import pprint
 
 
 def convert_keys_to_snake_case(dict_to_fix: dict) -> dict:
@@ -16,6 +17,8 @@ class SubClass:
 	Not meant to be instantiated directly, this class enables other classes to be recursively instantiated so that
 	you can make a deeply nested fully typed call such as
 	AlgorandTransaction.application_transaction.local_state_schema.num_byte_slice and have it work
+
+	I think this could be improved by digging into the python dataclasses API a bit, just an initial hack
 	"""
 
 	SUBCLASSES = {}
@@ -37,5 +40,9 @@ class SubClass:
 					new_dict[key] = convert_keys_to_snake_case(new_dict[key])
 					new_dict[key] = cls.SUBCLASSES[key].init_from_json_dict(new_dict[key])
 				elif type(new_dict[key]) == list:
+					pprint.pprint(new_dict[key])
 					new_dict[key] = list(map(lambda listDicts: cls.SUBCLASSES[key].init_from_json_dict(listDicts), new_dict[key]))
+		pprint.pprint(new_dict, indent=4)
 		return cls(**new_dict)
+
+
