@@ -64,7 +64,7 @@ class APIUser:
         account = requests.get(full_url).json()
         return AlgorandAccount.init_from_json_dict(account)
 
-    def get_asset_balances(self, asset_id: str, limit: int =100, **kwargs) -> AccountBalanceReq:
+    def get_asset_balances(self, asset_id: int, limit: int =100, **kwargs) -> AccountBalanceReq:
         """
         Get the balances in accounts for an asset
         """
@@ -74,6 +74,14 @@ class APIUser:
             full_url += f"&{params_string}"
         balances = requests.get(full_url).json()
         return AccountBalanceReq.init_from_json_dict(balances)
+
+    def get_asset_transactions(self, asset_id: int, limit: int = 100, **kwargs) -> AlgorandTransactionsReq:
+        full_url = self.BASE_URL + f"/assets/{asset_id}/transactions?limit={limit}"
+        if kwargs:
+            params_string = self.create_params_string_from_kwargs(kwargs)
+            full_url += f"&{params_string}"
+        transactions = requests.get(full_url).json()
+        return AlgorandTransactionsReq.init_from_json_dict(transactions)
 
 
     @staticmethod

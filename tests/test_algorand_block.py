@@ -56,7 +56,7 @@ class TestAlgorandTransaction(TestCase):
         transaction = APIUser().get_algorand_transaction(transaction_id)
         self.assertEqual(transaction.local_state_delta[0].delta[0]['key'],'bwAAAAAB4atw')
 
-class TestAccountTransactions(TestCase):
+class TestTransactions(TestCase):
 
     def test_get_account_transactions(self):
         """
@@ -71,6 +71,11 @@ class TestAccountTransactions(TestCase):
         account_id = "FPOU46NBKTWUZCNMNQNXRWNW3SMPOOK4ZJIN5WSILCWP662ANJLTXVRUKA"
         transactions = APIUser().get_account_transactions(account_id=account_id, txid=tx_id, max_round=20327413)
         self.assertEqual(transactions.transactions[0].asset_transfer_transaction.asset_id, 31566704)
+
+    def test_get_asset_transactions(self):
+        usdc_id = 31566704
+        transactions = APIUser().get_asset_transactions(asset_id=usdc_id)
+        self.assertEqual(len(transactions.transactions), 100)
 
 class TestAlgorandApplication(TestCase):
     """
