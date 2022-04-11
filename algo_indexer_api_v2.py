@@ -151,4 +151,4 @@ class APIUser:
 
 
 if __name__ == "__main__":
-    result = fire.Fire(APIUser)
+    fire.Fire(APIUser)

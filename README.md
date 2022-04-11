@@ -17,7 +17,7 @@ creating backtests for softare, doing on chain analyis to distribute airdrops, e
 ### Using the API Client
 The main API interface is in [algo_indexer_api_v2.py](algo_indexer_api_v2.py) and the data models are in [models](models).
 
-Suppose you wanted to write some code to programattically check the state of an Algorand transaction here is an example:
+Suppose you wanted to write some code to programmatically check the state of an Algorand transaction here is an example:
 
 ```python
 from algo_indexer_api_v2 import APIUser
@@ -75,7 +75,47 @@ if __name__ == '__main__':
     get_balances_of_asset(akita_inu_id)
 ```
 This shows how to get all the balances for the akita inu token for example. You might want to collect this data to
-analyze rates of people opting into the asset for example to get an idea of usage trends.
+analyze rates of people opting into the asset for example to get an idea of usage trends.  
+
+Example writing a custom data export script:  
+```python
+from algo_indexer_api_v2 import APIUser
+import pandas as pd
+
+def export_account_payment_transactions(account_id: str, max_to_export: int = 500, output: str = "summary.csv") -> None:
+    sender, receiver, amount, tx_type, asset_id = [], [], [], [], []
+    user = APIUser()
+    transactions_req = user.get_account_transactions(account_id)
+    counter = 0
+    while (transactions_req.next_token):
+        for transaction in transactions_req.transactions:
+            if transaction.tx_type == "pay":
+                sender.append(transaction.sender)
+                receiver.append(transaction.payment_transaction.receiver)
+                amount.append(transaction.payment_transaction.amount)
+                tx_type.append(transaction.tx_type)
+                asset_id.append(0)
+            if transaction.tx_type == "axfer":
+                sender.append(transaction.sender)
+                receiver.append(transaction.asset_transfer_transaction.receiver)
+                asset_id.append(transaction.asset_transfer_transaction.asset_id)
+                amount.append(transaction.asset_transfer_transaction.amount)
+                tx_type.append(transaction.tx_type)
+            counter += 1
+            print(counter)
+        if counter >= max_to_export:
+            break
+    # df_cols = ["sender", "receiver", "amount", "tx_type", "asset_id"]
+    df_data = {"sender": sender, "receiver": receiver, "amount": amount, "tx_type": tx_type, "asset_id": asset_id}
+    df = pd.DataFrame(df_data)
+    df.to_csv(open(output, "w"))
+
+if __name__ == '__main__':
+    random_account_id_from_algoexplorer = "C7RYOGEWDT7HZM3HKPSMU7QGWTRWR3EPOQTJ2OHXGYLARD3X62DNWELS34"
+    export_account_payment_transactions(random_account_id_from_algoexplorer)
+```
+
+
 
 ### Note on implementation of the models 
 I used another project I had worked on that [generates nested Python classes from arbitrary](https://github.com/ianm199/dataClassUtil)
@@ -88,6 +128,6 @@ intensive.
 I would consider this very much a first iteration. I would make some more updates if this gets some usage:
 * Adding the "search" functionality from the 
 * Dockerfile
-* Setup.py
+* Fix CLI commands, google Fire is not working right for the API user
 * PyPl support
 * Proper CI/CD with the tests + github actions
