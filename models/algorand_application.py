@@ -13,10 +13,22 @@ class GlobalStateSchema(SubClass):
     num_byte_slice: int = field(default_factory=int)
     num_uint: int = field(default_factory=int)
 
+@dataclass
+class Value(SubClass):
+    bytes: str = field(default_factory=str)
+    type: int = field(default_factory=int)
+    uint: int = field(default_factory=int)
+
+@dataclass
+class KeyValuePairs(SubClass):
+    SUBCLASSES = {'value': Value}
+
+    value: Value
+    key: str = field(default_factory=str)
 
 @dataclass
 class Params(SubClass):
-    SUBCLASSES = {"global_state_schema": GlobalStateSchema, "local_state_schmea": LocalStateSchema}
+    SUBCLASSES = {"global_state_schema": GlobalStateSchema, "local_state_schmea": LocalStateSchema, 'global_state': KeyValuePairs}
 
     global_state_schema: GlobalStateSchema
     local_state_schema: LocalStateSchema
@@ -24,7 +36,7 @@ class Params(SubClass):
     clear_state_program: str = field(default_factory=str)
     creator: str = field(default_factory=str)
     extra_program_pages: int = field(default_factory=int)
-    global_state: List[Dict] = field(default_factory=list)
+    global_state: List[KeyValuePairs] = field(default_factory=list)
 
 
 @dataclass

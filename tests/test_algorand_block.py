@@ -17,6 +17,11 @@ class TestAlgoBlock(TestCase):
         self.assertEqual(block.rewards.fee_sink, 'Y76M3MSY6DKBRHBL7C3NNDXGS5IIMQVQVUAB6MP4XEMMGVF2QWNPL226CA')
         # self.assertEqual(block.transactions[0].payment_transaction.receiver, 'LPYK3QS5DLIT7BTGAOKM5ALYUJEKQVFMUNPKG6AJ6QD2W6CLS3XEZQSEJI')
 
+    def test_other_block(self):
+        block_number = 20335116
+        block = APIUser().get_algorand_block(block_number)
+        self.assertEqual(block.round, block_number)
+
 class TestAlgorandTransaction(TestCase):
 
     def test_asset_transfer_get(self):
@@ -28,6 +33,11 @@ class TestAlgorandTransaction(TestCase):
         self.assertEqual(transaction.tx_type, "axfer")
         self.assertEqual(transaction.sender, "C7RYOGEWDT7HZM3HKPSMU7QGWTRWR3EPOQTJ2OHXGYLARD3X62DNWELS34")
         self.assertEqual(transaction.asset_transfer_transaction.asset_id, 127746157)
+
+    def test_app_call(self):
+        transaction_id = "PRYG5NCMHKJ67YED7PPBRRIN5IH4BMFSW6EDXFY4J7SAJDXMZUZQ"
+        transaction = APIUser().get_algorand_transaction(transaction_id)
+        self.assertEqual(transaction.id, transaction_id)
 
     def test_application_call_get(self):
         """

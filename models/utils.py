@@ -40,9 +40,12 @@ class SubClass:
 					new_dict[key] = convert_keys_to_snake_case(new_dict[key])
 					new_dict[key] = cls.SUBCLASSES[key].init_from_json_dict(new_dict[key])
 				elif type(new_dict[key]) == list:
-					pprint.pprint(new_dict[key])
 					new_dict[key] = list(map(lambda listDicts: cls.SUBCLASSES[key].init_from_json_dict(listDicts), new_dict[key]))
-		pprint.pprint(new_dict, indent=4)
-		return cls(**new_dict)
-
+		try:
+			return cls(**new_dict)
+		except Exception as e:
+			print("class that caused issue", cls)
+			print("data struct that caused issue")
+			pprint.pprint(e)
+			pprint.pprint(new_dict)
 

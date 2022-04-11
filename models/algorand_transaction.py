@@ -12,6 +12,7 @@ TRANSACTION = "transaction"
 class Value(SubClass):
     action: int = field(default_factory=int)
     uint: int = field(default_factory=int)
+    bytes: str = field(default_factory=str)
 
 
 @dataclass
@@ -50,6 +51,7 @@ class PaymentTransaction(SubClass):
     amount: int = field(default_factory=int)
     close_amount: int = field(default_factory=int)
     receiver: str = field(default_factory=str)
+    close_remainder_to: int = field(default_factory=int)
 
 
 @dataclass
@@ -101,6 +103,23 @@ class AssetConfigTransaction(SubClass):
     params: Params
     asset_id: int = field(default_factory=int)
 
+@dataclass
+class InnerTransaction(SubClass):
+    SUBCLASSES = {"payment_transaction": PaymentTransaction}
+
+    payment_transaction: PaymentTransaction
+    close_rewards: int = field(default_factory=int)
+    closing_amount: int = field(default_factory=int)
+    confirmed_round: int = field(default_factory=int)
+    fee: int = field(default_factory=int)
+    first_valid: int = field(default_factory=int)
+    intra_round_offset: int = field(default_factory=int)
+    last_valid: int = field(default_factory=int)
+    receiver_rewards: int = field(default_factory=int)
+    round_time: int = field(default_factory=int)
+    sender: str = field(default_factory=str)
+    sender_rewards: int = field(default_factory=int)
+    tx_type: str = field(default_factory=str)
 
 @dataclass
 class AlgorandTransaction(SubClass):
@@ -136,8 +155,5 @@ class AlgorandTransaction(SubClass):
     transaction_type: str = field(default_factory=str)
     note: str = field(default_factory=str)
     lease: str = field(default_factory=str)
+    inner_txns: List[InnerTransaction] = field(default_factory=list)
 
-# @dataclass
-# class AlgorandTransaction:
-# 	transaction: Transaction
-# 	current_round: int = field(default_factory=int)
